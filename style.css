@@ -1,0 +1,19 @@
+.big-container {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+table {
+    width:100%; 
+    border:1px solid black;
+    grid-column: 2;
+}
+ul {
+    list-style-type: none;
+    display: grid;
+    gap: 15px
+}
+button {
+    margin-top: 4%;
+    padding: 10px;
+}
