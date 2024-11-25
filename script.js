@@ -3,10 +3,9 @@ function Book (title,author,pages,read,id=null){
     this.author=author
     this.pages=pages
     this.read=read
-    this.id=id
+    
 
 }
-
 
 const myLibrary = [];
 
@@ -16,42 +15,13 @@ function addBookToLibrary() {
     let title=document.querySelector('#title').value
     let author=document.querySelector('#author').value
     let pages=document.querySelector('#pages').value
-    let read=document.querySelector('#read').value
+    let read=document.querySelector('#read').checked
     let newBook=new Book(title,author,pages,read)
-    newBook.id=newBook.title+newBook.author+newBook.pages+newBook.read
     
     myLibrary.push(newBook)
-
-    const tr=document.createElement("tr")
-    tr.setAttribute('id', newBook.id)
-    table.appendChild(tr)
-    for (key in newBook) {
-        if (key==='id') break
-        const td=document.createElement("td")
-        td.textContent=newBook[key]
-        
-        td.setAttribute('style','border:1px solid black')
-        tr.appendChild(td)
-        
-    }
-    const removeButton=document.createElement("button")
-    removeButton.setAttribute('type', 'button')
-    removeButton.setAttribute('id', newBook.id)
-    removeButton.textContent='Remove'
-    tr.appendChild(removeButton)
-    removeButton.addEventListener('click',removeRow)
-    // myLibrary.forEach(function(book){
-    //     const tr=document.createElement("tr")
-        
-    //     table.appendChild(tr)
-    //     for (key in book) {
-    //         const td=document.createElement("td")
-    //         td.textContent=book[key]
-    //         td.setAttribute('style','border:1px solid black')
-    //         tr.appendChild(td)
-            
-    //     }
-    // })
+    createLibrary()
+    
+    
 }
 
 
@@ -62,22 +32,52 @@ buttAddBook.addEventListener('click',addBookToLibrary)
 
 const table=document.querySelector('.container')
 
-myLibrary.forEach(function(book){
-    const tr=document.createElement("tr")
-    
-    table.appendChild(tr)
-    for (let i=0;i<4;i++) {
-        const td=document.createElement("td")
-        td.textContent=book[i]
-        td.setAttribute('style','border:1px solid black')
-        tr.appendChild(td)
-        
-    }
-})
+
 
 function removeRow(event){
-    let trIdToRemove=event.currentTarget.id
+    let indexToRemove=event.currentTarget.id
     
-    let trToRemove=document.querySelector('tr#'+trIdToRemove)
-    table.removeChild(trToRemove)
+    myLibrary.splice(indexToRemove,1)
+    createLibrary()
+}
+function createLibrary(){
+    
+    let rows=document.querySelectorAll('tr:not(:first-child)')
+    if (rows.length>0) {
+        rows.forEach(function(child){child.remove()})
+    }
+    
+    myLibrary.forEach(function(book){
+        const tr=document.createElement("tr")
+        
+        table.appendChild(tr)
+        for (key in book) {
+            const td=document.createElement("td")
+            td.textContent=book[key]
+            td.setAttribute('style','border:1px solid black')
+            tr.appendChild(td)
+            
+        }
+        // remove button
+        const removeButton=document.createElement("button")
+        removeButton.setAttribute('type', 'button')
+        removeButton.setAttribute('id', myLibrary.indexOf(book))
+        removeButton.textContent='Remove'
+        tr.appendChild(removeButton)
+        removeButton.addEventListener('click',removeRow)
+        // change read status
+        const changeReadButton=document.createElement("button")
+        changeReadButton.setAttribute('type', 'button')
+        changeReadButton.setAttribute('id', myLibrary.indexOf(book))
+        changeReadButton.textContent='Change Read Status'
+        tr.appendChild(changeReadButton)
+        changeReadButton.addEventListener('click',changeRead)
+    })
+    
+}
+function changeRead(event){
+    let indexToChange=event.currentTarget.id
+    
+    myLibrary[indexToChange].read=!myLibrary[indexToChange].read
+    createLibrary()
 }
