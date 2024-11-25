@@ -18,11 +18,12 @@ function addBookToLibrary() {
     let pages=document.querySelector('#pages').value
     let read=document.querySelector('#read').value
     let newBook=new Book(title,author,pages,read)
-    newBook.id=myLibrary.length + 1
-    console.log(newBook)
+    newBook.id=newBook.title+newBook.author+newBook.pages+newBook.read
+    
     myLibrary.push(newBook)
 
     const tr=document.createElement("tr")
+    tr.setAttribute('id', newBook.id)
     table.appendChild(tr)
     for (key in newBook) {
         if (key==='id') break
@@ -33,6 +34,12 @@ function addBookToLibrary() {
         tr.appendChild(td)
         
     }
+    const removeButton=document.createElement("button")
+    removeButton.setAttribute('type', 'button')
+    removeButton.setAttribute('id', newBook.id)
+    removeButton.textContent='Remove'
+    tr.appendChild(removeButton)
+    removeButton.addEventListener('click',removeRow)
     // myLibrary.forEach(function(book){
     //     const tr=document.createElement("tr")
         
@@ -67,3 +74,10 @@ myLibrary.forEach(function(book){
         
     }
 })
+
+function removeRow(event){
+    let trIdToRemove=event.currentTarget.id
+    
+    let trToRemove=document.querySelector('tr#'+trIdToRemove)
+    table.removeChild(trToRemove)
+}
